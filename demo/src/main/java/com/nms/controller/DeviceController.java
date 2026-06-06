@@ -1,19 +1,9 @@
-
-/*
-MethodEndpointWhat it does
-POST/api/devicesAdd a new device
-GET/api/devicesGet all devices
-GET/api/devices/{id}Get device by ID
-DELETE/api/devices/{id}Delete a device
- */
-
-
 package com.nms.controller;
 
 import com.nms.dto.DeviceRequestDTO;
 import com.nms.dto.DeviceResponseDTO;
-
 import com.nms.service.DeviceService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +21,7 @@ public class DeviceController {
     }
 
     @PostMapping
-    public ResponseEntity<DeviceResponseDTO> addDevice(@RequestBody DeviceRequestDTO request) {
+    public ResponseEntity<DeviceResponseDTO> addDevice(@Valid @RequestBody DeviceRequestDTO request) {
         return new ResponseEntity<>(deviceService.addDevice(request), HttpStatus.CREATED);
     }
 

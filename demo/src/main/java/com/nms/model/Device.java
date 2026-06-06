@@ -3,6 +3,7 @@ package com.nms.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
@@ -13,6 +14,10 @@ public class Device {
 
     @Id
     private String id;
+
+    @Version
+    private Long version;
+
     private String name;
     private String ipAddress;
     private String status;

@@ -3,6 +3,7 @@ package com.nms.service;
 import com.nms.dto.DeviceRequestDTO;
 import com.nms.dto.DeviceResponseDTO;
 import com.nms.exception.DeviceNotFoundException;
+import com.nms.exception.DuplicateDeviceException;
 import com.nms.model.Device;
 import com.nms.repository.DeviceRepository;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class DeviceService {
 
     public DeviceResponseDTO addDevice(DeviceRequestDTO request) {
         if (deviceRepository.existsByIpAddress(request.getIpAddress())) {
-            throw new RuntimeException("Device with IP " + request.getIpAddress() + " already exists");
+            throw new DuplicateDeviceException(request.getIpAddress());
         }
         Device device = new Device(request.getName(), request.getIpAddress());
         return mapToResponse(deviceRepository.save(device));
