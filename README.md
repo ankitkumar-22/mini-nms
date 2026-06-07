@@ -346,10 +346,11 @@ Planned:
 
 ---
 
-## License
-
-_Add your license here (e.g. MIT)._
-
 ## Author
 
-_Add your name / contact / repository URL here._
+Ankit Kumar
+
+Contact Information: 
+LinkedIn: https://www.linkedin.com/in/ankit-kumar-5a447627b/
+email: ankitkumar220520041@gmail.com
+
