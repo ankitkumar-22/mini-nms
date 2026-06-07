@@ -4,6 +4,7 @@ import com.nms.dto.DeviceRequestDTO;
 import com.nms.dto.DeviceResponseDTO;
 import com.nms.service.DeviceService;
 import jakarta.validation.Valid;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@Profile("web")
 @RequestMapping("/api/devices")
 public class DeviceController {
 

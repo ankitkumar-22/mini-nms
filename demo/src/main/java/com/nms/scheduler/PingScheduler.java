@@ -1,77 +1,46 @@
+// src/main/java/com/nms/scheduler/PingScheduler.java
 package com.nms.scheduler;
 
+import com.nms.messaging.PingJob;
 import com.nms.model.Device;
 import com.nms.repository.DeviceRepository;
-import com.nms.service.MetricService;
-import com.nms.service.PingService;
-import com.nms.service.PingService.PingResult;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
+@Profile("scheduler")
 public class PingScheduler {
 
     private static final Logger log = LoggerFactory.getLogger(PingScheduler.class);
 
     private final DeviceRepository deviceRepository;
-    private final PingService pingService;
-    private final MetricService metricService;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public PingScheduler(DeviceRepository deviceRepository,
-                         PingService pingService,
-                         MetricService metricService) {
+                         KafkaTemplate<String, Object> kafkaTemplate) {
         this.deviceRepository = deviceRepository;
-        this.pingService = pingService;
-        this.metricService = metricService;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
-    @Scheduled(fixedRate = 60000) // runs every 60 seconds
-    public void pingAllDevices() {
+    @Scheduled(fixedRate = 60000)
+    @SchedulerLock(name = "pingDispatch", lockAtMostFor = "PT50S", lockAtLeastFor = "PT5S")
+    public void dispatchPingJobs() {
         List<Device> devices = deviceRepository.findAll();
-
         if (devices.isEmpty()) {
-            log.info("[{}] No devices registered. Skipping ping cycle.", LocalDateTime.now());
+            log.info("No devices registered. Nothing to dispatch.");
             return;
         }
-
-        log.info("[{}] Starting ping cycle for {} device(s).", LocalDateTime.now(), devices.size());
-
         for (Device device : devices) {
-            try {
-                PingResult result = pingService.ping(device.getIpAddress());
-
-                // Update device status in MongoDB
-                device.setStatus(result.getStatus());
-                device.setLastChecked(LocalDateTime.now());
-                deviceRepository.save(device);
-
-                // Save metric snapshot
-                metricService.saveMetric(
-                        device.getId(),
-                        device.getIpAddress(),
-                        result.getLatencyMs(),
-                        result.getPacketLoss(),
-                        result.getStatus()
-                );
-
-                log.info("Device: {} | IP: {} | Status: {} | Latency: {}ms | Packet Loss: {}%",
-                        device.getName(),
-                        device.getIpAddress(),
-                        result.getStatus(),
-                        result.getLatencyMs(),
-                        result.getPacketLoss());
-
-            } catch (Exception e) {
-                log.error("Failed to ping device {} ({}): {}",
-                        device.getName(), device.getIpAddress(), e.getMessage());
-            }
+            kafkaTemplate.send("ping-jobs", device.getId(),
+                    new PingJob(device.getId(), device.getIpAddress()));
         }
-
-        log.info("[{}] Ping cycle complete.", LocalDateTime.now());
+        log.info("Dispatched {} ping job(s).", devices.size());
     }
 }
