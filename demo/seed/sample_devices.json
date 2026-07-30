@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Google Primary DNS",
+    "ipAddress": "8.8.8.8",
+    "category": "Public DNS",
+    "description": "Google Primary Public DNS Server (Expected status: UP)"
+  },
+  {
+    "name": "Google Secondary DNS",
+    "ipAddress": "8.8.4.4",
+    "category": "Public DNS",
+    "description": "Google Secondary Public DNS Server (Expected status: UP)"
+  },
+  {
+    "name": "Cloudflare Primary DNS",
+    "ipAddress": "1.1.1.1",
+    "category": "Edge Resolver",
+    "description": "Cloudflare 1.1.1.1 DNS Resolver (Expected status: UP)"
+  },
+  {
+    "name": "Cloudflare Secondary DNS",
+    "ipAddress": "1.0.0.1",
+    "category": "Edge Resolver",
+    "description": "Cloudflare 1.0.0.1 DNS Resolver (Expected status: UP)"
+  },
+  {
+    "name": "Quad9 Security DNS",
+    "ipAddress": "9.9.9.9",
+    "category": "Security DNS",
+    "description": "Quad9 Threat-Blocking DNS (Expected status: UP)"
+  },
+  {
+    "name": "OpenDNS Primary Resolver",
+    "ipAddress": "208.67.222.222",
+    "category": "Public DNS",
+    "description": "Cisco OpenDNS Resolver (Expected status: UP)"
+  },
+  {
+    "name": "Localhost Gateway",
+    "ipAddress": "127.0.0.1",
+    "category": "Infrastructure",
+    "description": "Local System Loopback Interface (Expected status: UP)"
+  },
+  {
+    "name": "Unreachable Node Alpha",
+    "ipAddress": "192.0.2.1",
+    "category": "Test / Down Target",
+    "description": "TEST-NET-1 non-routable IP address for testing packet loss and DOWN status transitions"
+  },
+  {
+    "name": "Unreachable Node Beta",
+    "ipAddress": "198.51.100.1",
+    "category": "Test / Down Target",
+    "description": "TEST-NET-2 non-routable IP address for testing timeout and DOWN status transitions"
+  }
+]

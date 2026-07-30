@@ -9,8 +9,8 @@ import java.util.List;
 
 @Repository
 public interface NetworkMetricRepository extends MongoRepository<NetworkMetric, String> {
-    List<NetworkMetric> findByDeviceId(String deviceId);
-    List<NetworkMetric> findByDeviceIdAndTimestampBetween(
+    List<NetworkMetric> findByDeviceIdOrderByTimestampAsc(String deviceId);
+    List<NetworkMetric> findByDeviceIdAndTimestampBetweenOrderByTimestampAsc(
             String deviceId, LocalDateTime start, LocalDateTime end
     );
     List<NetworkMetric> findTop10ByDeviceIdOrderByTimestampDesc(String deviceId);

@@ -4,6 +4,8 @@ package com.nms.ingestion;
 import com.nms.messaging.PingResult;
 import com.nms.model.Device;
 import com.nms.service.MetricService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -17,6 +19,8 @@ import java.time.LocalDateTime;
 @Component
 @Profile("ingestion")
 public class ResultIngestionConsumer {
+
+    private static final Logger log = LoggerFactory.getLogger(ResultIngestionConsumer.class);
 
     private final MongoTemplate mongoTemplate;
     private final MetricService metricService;
@@ -39,5 +43,7 @@ public class ResultIngestionConsumer {
         metricService.saveMetric(
                 result.deviceId(), result.ipAddress(),
                 result.latencyMs(), result.packetLoss(), result.status());
+
+        log.info("Ingested {} -> {} ({} ms)", result.deviceId(), result.status(), result.latencyMs());
     }
 }

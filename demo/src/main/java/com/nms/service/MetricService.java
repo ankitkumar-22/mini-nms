@@ -30,10 +30,10 @@ public class MetricService {
     public List<NetworkMetric> getMetricsByRange(String deviceId,
                                                  LocalDateTime start,
                                                  LocalDateTime end) {
-        return metricRepository.findByDeviceIdAndTimestampBetween(deviceId, start, end);
+        return metricRepository.findByDeviceIdAndTimestampBetweenOrderByTimestampAsc(deviceId, start, end);
     }
 
     public List<NetworkMetric> getAllMetricsForDevice(String deviceId) {
-        return metricRepository.findByDeviceId(deviceId);
+        return metricRepository.findByDeviceIdOrderByTimestampAsc(deviceId);
     }
 }
